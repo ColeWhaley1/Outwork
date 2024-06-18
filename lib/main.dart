@@ -32,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _pages = [
-    Schedule(title: 'This Week'),
+    Schedule(title: 'Upcoming Workouts'),
     WorkoutPage(title: 'Workout Decks'),
   ];
 
@@ -53,8 +53,8 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: _onSelectedPage,
         items: const [
           BottomNavigationBarItem(
-            label: 'Home',
-            icon: Icon(Icons.home),
+            label: 'Schedule',
+            icon: Icon(Icons.calendar_month),
           ),
           BottomNavigationBarItem(
             label: 'Workouts',
