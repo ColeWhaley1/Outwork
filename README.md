@@ -8,5 +8,5 @@ I believe there should be some other aspect of social motivation. Some ideas:
 
 - Social media-like page to post workout pictures/meals.
 - Some fun way to encourage friends to keep working out.
-- etc.
+- Maybe users should be able to create their own workout cards? (However, this brings issues with moderating video/pictures/text)
 
