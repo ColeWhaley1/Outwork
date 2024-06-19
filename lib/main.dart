@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:workout_app/pages/schedule.dart';
-import 'package:workout_app/pages/workouts.dart';
+import 'package:workout_app/pages/schedule/schedule.dart';
+import 'package:workout_app/pages/workouts/workouts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'OutWork',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 190, 55, 55)),
+            seedColor: Color.fromARGB(255, 55, 127, 190)),
         useMaterial3: true,
       ),
       home: const MyHomePage(),
