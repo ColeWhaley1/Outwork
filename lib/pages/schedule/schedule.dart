@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:workout_app/pages/schedule/types.dart';
+import 'package:workout_app/pages/schedule/workout_info.dart';
 import 'package:workout_app/pages/workouts/types.dart';
 
 class Schedule extends StatefulWidget {
@@ -20,11 +21,7 @@ class _ScheduleState extends State<Schedule> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: const Column(
-        children: [
-          ThisWeekSchedule(),
-        ],
-      ),
+      body: const Expanded(child: ThisWeekSchedule()),
     );
   }
 }
@@ -37,54 +34,68 @@ class ThisWeekSchedule extends StatefulWidget {
 }
 
 class _ThisWeekScheduleState extends State<ThisWeekSchedule> {
+  @override
+  Widget build(BuildContext context) {
+    return OrientationBuilder(builder: (context, orientation) {
+      return Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: WeekCarousel(
+            height: orientation == Orientation.portrait ? 300.0 : 200.0),
+      );
+    });
+  }
+}
+
+class WeekCarousel extends StatefulWidget {
+  const WeekCarousel({super.key, required this.height});
+
+  final double height;
+
+  @override
+  State<WeekCarousel> createState() => _WeekCarouselState();
+}
+
+class _WeekCarouselState extends State<WeekCarousel> {
   // TEMP, using as example. This will be populated when user adds workout for specific day
   var weekInfo = [
-    DayInfo('Sunday', [
-      Deck([ExcerciseCard('push-ups', 10), ExcerciseCard('sit-ups', 10)])
-    ]),
-    DayInfo('Monday', [
-      Deck([ExcerciseCard('push-ups', 10), ExcerciseCard('sit-ups', 10)])
-    ]),
-    DayInfo('Tuesday', [
-      Deck([ExcerciseCard('push-ups', 10), ExcerciseCard('sit-ups', 10)])
-    ]),
-    DayInfo('Wednesday', [
-      Deck([ExcerciseCard('push-ups', 10), ExcerciseCard('sit-ups', 10)])
-    ]),
-    DayInfo('Thursday', [
-      Deck([ExcerciseCard('push-ups', 10), ExcerciseCard('sit-ups', 10)])
-    ]),
-    DayInfo('Friday', [
-      Deck([ExcerciseCard('push-ups', 10), ExcerciseCard('sit-ups', 10)])
-    ]),
-    DayInfo('Saturday', [
-      Deck([ExcerciseCard('push-ups', 10), ExcerciseCard('sit-ups', 10)])
-    ]),
+    DayInfo(
+        'Sunday', Deck([Exercise('push-ups', 10), Exercise('sit-ups', 10)])),
+    DayInfo(
+        'Monday', Deck([Exercise('push-ups', 10), Exercise('sit-ups', 10)])),
+    DayInfo(
+        'Tuesday', Deck([Exercise('push-ups', 10), Exercise('sit-ups', 10)])),
+    DayInfo(
+        'Wednesday', Deck([Exercise('push-ups', 10), Exercise('sit-ups', 10)])),
+    DayInfo(
+        'Thursday', Deck([Exercise('push-ups', 10), Exercise('sit-ups', 10)])),
+    DayInfo(
+        'Friday', Deck([Exercise('push-ups', 10), Exercise('sit-ups', 10)])),
+    DayInfo(
+        'Saturday', Deck([Exercise('push-ups', 10), Exercise('sit-ups', 10)])),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: CarouselSlider(
-        options: CarouselOptions(height: 300.0),
-        items: weekInfo.map((dayInfo) {
-          return Builder(
-            builder: (BuildContext builder) {
-              return Container(
-                width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.inverseSurface,
-                ),
-                child: DayScheduleCard(
-                  dayInfo: dayInfo,
-                ),
-              );
-            },
-          );
-        }).toList(),
+    return CarouselSlider(
+      options: CarouselOptions(
+        height: widget.height,
       ),
+      items: weekInfo.map((dayInfo) {
+        return Builder(
+          builder: (BuildContext builder) {
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.symmetric(horizontal: 5.0),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.inverseSurface,
+              ),
+              child: DayScheduleCard(
+                dayInfo: dayInfo,
+              ),
+            );
+          },
+        );
+      }).toList(),
     );
   }
 }
@@ -99,19 +110,35 @@ class DayScheduleCard extends StatefulWidget {
 }
 
 class _DayScheduleCardState extends State<DayScheduleCard> {
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 50.0,
-      margin: const EdgeInsets.all(10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(widget.dayInfo.day, style: const TextStyle(fontSize: 16.0, color: Colors.white)),
-        ],
-      ),
+    return Column(
+      children: [
+        Container(
+          height: 20.0,
+          margin: const EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.dayInfo.day,
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(5.0),
+            margin: const EdgeInsets.all(5.0),
+            child: WorkoutInfo(deck: widget.dayInfo.deck),
+          ),
+        ),
+      ],
     );
   }
 }

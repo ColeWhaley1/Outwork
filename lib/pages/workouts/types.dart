@@ -1,12 +1,12 @@
 class Deck {
-  final List<ExcerciseCard> cards;
+  final List<Exercise> exercises;
 
-  Deck(this.cards);
+  Deck(this.exercises);
 }
 
-class ExcerciseCard {
+class Exercise {
   final String name;
   final num timeDuration;
 
-  ExcerciseCard(this.name, this.timeDuration); 
+  Exercise(this.name, this.timeDuration); 
 }
