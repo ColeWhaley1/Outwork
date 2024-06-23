@@ -21,7 +21,12 @@ class _ScheduleState extends State<Schedule> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: const Expanded(child: ThisWeekSchedule()),
+      body: const Flex(
+        direction: Axis.horizontal,
+        children: [
+          Expanded(child: ThisWeekSchedule()),
+        ],
+      ),
     );
   }
 }
@@ -138,6 +143,34 @@ class _DayScheduleCardState extends State<DayScheduleCard> {
             child: WorkoutInfo(deck: widget.dayInfo.deck),
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                height: 40.0,
+                width: 40.0,
+                child: ElevatedButton(
+                  onPressed: () {
+                    // expand widget to full screen
+                    return;
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    backgroundColor: const Color.fromARGB(60, 255, 255, 255),
+                  ),
+                  child: const Center(
+                    child: Icon(
+                      Icons.open_in_full,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )
       ],
     );
   }
