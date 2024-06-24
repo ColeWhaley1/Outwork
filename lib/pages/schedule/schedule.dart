@@ -140,7 +140,10 @@ class _DayScheduleCardState extends State<DayScheduleCard> {
           child: Container(
             padding: const EdgeInsets.all(5.0),
             margin: const EdgeInsets.all(5.0),
-            child: WorkoutInfo(deck: widget.dayInfo.deck),
+            child: WorkoutInfo(
+              deck: widget.dayInfo.deck,
+              textColor: Colors.white,
+            ),
           ),
         ),
         Padding(
@@ -148,12 +151,19 @@ class _DayScheduleCardState extends State<DayScheduleCard> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Container(
+              SizedBox(
                 height: 40.0,
                 width: 40.0,
                 child: ElevatedButton(
                   onPressed: () {
-                    // expand widget to full screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ExpandedDayScheduleCard(
+                          dayInfo: widget.dayInfo,
+                        ),
+                      ),
+                    );
                     return;
                   },
                   style: ElevatedButton.styleFrom(
@@ -172,6 +182,33 @@ class _DayScheduleCardState extends State<DayScheduleCard> {
           ),
         )
       ],
+    );
+  }
+}
+
+class ExpandedDayScheduleCard extends StatefulWidget {
+  const ExpandedDayScheduleCard({super.key, required this.dayInfo});
+
+  final DayInfo dayInfo;
+  @override
+  State<ExpandedDayScheduleCard> createState() =>
+      _ExpandedDayScheduleCardState();
+}
+
+class _ExpandedDayScheduleCardState extends State<ExpandedDayScheduleCard> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.dayInfo.day),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: WorkoutInfo(
+          deck: widget.dayInfo.deck,
+          textColor: Colors.black,
+        ),
+      ),
     );
   }
 }
