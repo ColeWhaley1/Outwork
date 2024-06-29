@@ -1,3 +1,7 @@
+# Security Reasons
+.env
+/secrets/
+
 # Miscellaneous
 *.class
 *.log
