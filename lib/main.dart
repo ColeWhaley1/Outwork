@@ -1,8 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:workout_app/pages/schedule/schedule.dart';
 import 'package:workout_app/pages/workouts/workouts.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -15,7 +21,7 @@ class MyApp extends StatelessWidget {
       title: 'OutWork',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-            seedColor: Color.fromARGB(255, 55, 127, 190)),
+            seedColor: const Color.fromARGB(255, 55, 127, 190)),
         useMaterial3: true,
       ),
       home: const MyHomePage(),
@@ -32,8 +38,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _pages = [
-    Schedule(title: 'Upcoming Workouts'),
-    WorkoutPage(title: 'Workout Decks'),
+    const Schedule(title: 'Upcoming Workouts'),
+    const WorkoutPage(title: 'Workout Decks'),
   ];
 
   int _currPageIndex = 0;
