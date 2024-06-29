@@ -1,6 +1,7 @@
 # Security Reasons
 .env
 /secrets/
+lib/firebase_options.dart
 
 # Miscellaneous
 *.class
