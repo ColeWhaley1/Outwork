@@ -1,18 +1,21 @@
-require('dotenv').config();
+import fs from 'fs';
+import path from 'path';
 import admin from "firebase-admin";
 
-let serviceAccount: string;
-if(typeof process.env.SERVICE_ACCOUNT_KEY_PATH === 'string'){
-  serviceAccount = require(process.env.SERVICE_ACCOUNT_KEY_PATH);
+let serviceAccountPath: string;
+if (process.env.SERVICE_ACCOUNT_KEY_PATH) {
+  serviceAccountPath = process.env.SERVICE_ACCOUNT_KEY_PATH;
 } else {
-  throw new Error('Service account path undefined');
+  throw new Error('Service account path is null or undefined.');
 }
 
+let serviceAccount = require(serviceAccountPath);
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert(serviceAccount),
 });
 
-const db = admin.firestore();
+const db: FirebaseFirestore.Firestore = admin.firestore();
 
 export default db;
+

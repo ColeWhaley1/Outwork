@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
-import { getUsersService } from '../services/getUsersService';
+import { getUsersService } from '../../services/user/getUsersService';
 
 export const getUsersController = async (
-    req: Request, res: Response
-) => {
+    req: Request, 
+    res: Response
+): Promise<void> => {
     try {
         const users = await getUsersService();
         

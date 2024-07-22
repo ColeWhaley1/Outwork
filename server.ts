@@ -1,7 +1,10 @@
+import dotenv from 'dotenv';
+dotenv.config({ path: '../.env' });
+
 import express from 'express';
 
 // Route imports
-import userRoutes from './backend/api/userRoutes.ts';
+import userRoutes from './backend/api/userRoutes';
 
 const app = express();
 
