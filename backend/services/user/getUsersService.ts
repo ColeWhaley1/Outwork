@@ -1,4 +1,4 @@
-import { User } from "../../interfaces/getUsersInterfaces";
+import { User } from "../../interfaces/userInterfaces";
 import db from "../../../db";
 
 export const getUsersService = async (): Promise<User[]> => {

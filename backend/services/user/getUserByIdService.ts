@@ -1,5 +1,5 @@
 import db from "../../../db";
-import { User } from "../../interfaces/getUsersInterfaces";
+import { User } from "../../interfaces/userInterfaces";
 
 
 export const getUserByIdService = async (
@@ -9,15 +9,15 @@ export const getUserByIdService = async (
 
         const user_snapshot = await db.collection('user').doc(id).get();
 
-        if(!user_snapshot){
+        if (!user_snapshot) {
             throw new Error(`snapshot does not exist for user with id: ${id}`);
         }
 
         const user = user_snapshot.data() as User;
 
         return user;
-        
-    } catch (error) {  
+
+    } catch (error) {
         console.log(error);
         return {};
     }
