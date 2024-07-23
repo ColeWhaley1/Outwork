@@ -11,6 +11,7 @@ export const createExerciseController = async (
     try {
 
         // store exercise video if exists, return link
+        
 
         // use video link to create exercise object, pass to createExerciseService
 
