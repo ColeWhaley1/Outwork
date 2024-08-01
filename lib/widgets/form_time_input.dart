@@ -52,18 +52,31 @@ class _FormTimeInput extends State<FormTimeInput> {
         if(countMinutes > 0){ // carry the 1 from minutes
           countMinutes--;
           countSeconds += (60 - seconds);
+        } else {
+          countSeconds = 0;
         } 
       } else {
         countSeconds -= seconds;
       }
+      _controllerMinutes.text = countMinutes.toString();
+      _controllerSeconds.text = countSeconds.toString();
     });
   }
 
   void increment(int seconds) {
     setState(() {
-      if (countSeconds + seconds > 60) {
-        
+      if (countSeconds + seconds >= 60) {
+        if(countMinutes < 99){
+          countMinutes++;
+          countSeconds = countSeconds + seconds - 60;
+        } else {
+          countSeconds = 59;
+        }
+      } else {
+        countSeconds += seconds;
       }
+      _controllerMinutes.text = countMinutes.toString();
+      _controllerSeconds.text = countSeconds.toString();
     });
   }
 
@@ -93,6 +106,11 @@ class _FormTimeInput extends State<FormTimeInput> {
       if(controller.text.isEmpty){
         controller.text = '0';
         count = 0;
+      }
+      final inputSeconds = int.tryParse(controller.text) ?? 0;
+      if(inputSeconds > 59){
+        controller.text = '59';
+        count = 59;
       }
     }
   }
