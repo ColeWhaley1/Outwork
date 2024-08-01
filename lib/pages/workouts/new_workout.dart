@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workout_app/widgets/form_incrementer.dart';
+import 'package:workout_app/widgets/form_time_input.dart';
 
 class NewWorkout extends StatelessWidget {
   const NewWorkout({super.key, required this.title});
@@ -61,7 +62,7 @@ class _NewWorkoutFormState extends State<NewWorkoutForm> {
             const SizedBox(height: 20),
             const FormIncrementer(label: 'Duration'),
             const SizedBox(height: 20),
-            const FormIncrementer(label: 'Rest Between Sets'),
+            const FormTimeInput(label: 'Rest Between Sets'),
           ],
         ),
       ),

@@ -12,6 +12,7 @@ class FormIncrementer extends StatefulWidget {
 
 class _FormIncrementer extends State<FormIncrementer> {
   late TextEditingController _controller;
+  late FocusNode _focusNode;
   int count = 0;
 
   @override
@@ -19,12 +20,16 @@ class _FormIncrementer extends State<FormIncrementer> {
     super.initState();
     _controller = TextEditingController(text: '0');
     _controller.addListener(updateCountWhenEnteredManually);
+    _focusNode = FocusNode();
+    _focusNode.addListener(handleFocusChange);
   }
 
   @override
   void dispose() {
     _controller.removeListener(updateCountWhenEnteredManually);
     _controller.dispose();
+    _focusNode.dispose();
+    _focusNode.removeListener(handleFocusChange);
     super.dispose();
   }
 
@@ -39,7 +44,7 @@ class _FormIncrementer extends State<FormIncrementer> {
 
   void updateCountWhenEnteredManually() {
     final input = _controller.text;
-    if (input.isNotEmpty) {
+    if(input.isNotEmpty){
       setState(() {
         count = int.tryParse(input) ?? 0;
       });
@@ -53,6 +58,15 @@ class _FormIncrementer extends State<FormIncrementer> {
         _controller.text = count.toString();
       }
     });
+  }
+
+  void handleFocusChange() {
+    if(!_focusNode.hasFocus){
+      if(_controller.text.isEmpty){
+        _controller.text = '0';
+        count = 0;
+      }
+    }
   }
 
   @override
@@ -83,6 +97,7 @@ class _FormIncrementer extends State<FormIncrementer> {
                     width: 100,
                     child: TextFormField(
                       controller: _controller,
+                      focusNode: _focusNode,
                       style: const TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
