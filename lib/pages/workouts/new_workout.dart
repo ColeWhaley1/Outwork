@@ -81,10 +81,12 @@ class _FormIncrementer extends State<FormIncrementer> {
   void initState() {
     super.initState();
     _controller = TextEditingController(text: '0');
+    _controller.addListener(updateCountWhenEnteredManually);
   }
 
   @override
   void dispose() {
+    _controller.removeListener(updateCountWhenEnteredManually);
     _controller.dispose();
     super.dispose();
   }
@@ -93,16 +95,25 @@ class _FormIncrementer extends State<FormIncrementer> {
     setState(() {
       if(count > 0){
         count--;
-        _controller = TextEditingController(text: count.toString());
+        _controller.text = count.toString();
       }
     });
   }
 
+  void updateCountWhenEnteredManually() {
+    final input = _controller.text;
+    if(input.isNotEmpty){
+      setState(() {
+        count = int.tryParse(input) ?? 0;
+      });
+    }
+  }
+
   void increment() {
     setState(() {
-      if(count < 100){
+      if(count < 99){
         count++;
-        _controller = TextEditingController(text: count.toString());
+        _controller.text = count.toString();
       }
     });
   }
@@ -113,15 +124,18 @@ class _FormIncrementer extends State<FormIncrementer> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              shape: const CircleBorder(),
-              padding: const EdgeInsets.all(5),
+          Padding(
+            padding: const EdgeInsets.only(top: 24.0),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                shape: const CircleBorder(),
+                padding: const EdgeInsets.all(5),
+              ),
+              onPressed: decrement, 
+              child: const Icon(Icons.remove),
             ),
-            onPressed: decrement, 
-            child: const Icon(Icons.remove),
           ),
           Column(
             children: [
@@ -151,15 +165,18 @@ class _FormIncrementer extends State<FormIncrementer> {
               ),
             ],
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              shape: const CircleBorder(),
-              padding: const EdgeInsets.all(5),
+          Padding(
+            padding: const EdgeInsets.only(top: 24.0),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                shape: const CircleBorder(),
+                padding: const EdgeInsets.all(5),
+              ),
+              onPressed: increment, 
+              child: const Icon(Icons.add),
             ),
-            onPressed: increment, 
-            child: const Icon(Icons.add),
           ),
         ],
       ),
