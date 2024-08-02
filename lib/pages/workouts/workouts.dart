@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:workout_app/pages/workouts/new_workout.dart';
+import 'package:workout_app/pages/workouts/new_exercise.dart';
 
 class WorkoutPage extends StatefulWidget {
   const WorkoutPage({super.key, required this.title});
@@ -16,7 +16,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => NewWorkout(
+        builder: (context) => const NewExercise(
           title: 'New Workout'
         ),
       ),
