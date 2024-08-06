@@ -68,6 +68,8 @@ class _NewExerciseFormState extends State<NewExerciseForm> {
                       const SizedBox(height: 20),
                       const FormIncrementer(label: 'Duration'),
                       const SizedBox(height: 20),
+                      const FormIncrementer(label: 'Weight (lbs.)'),
+                      const SizedBox(height: 20),
                       const FormTimeInput(label: 'Rest Between Sets'),
                       const SizedBox(height: 20),
                       const Divider(

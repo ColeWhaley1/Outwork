@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageOrVideoPicker extends StatefulWidget {
@@ -34,7 +35,7 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(8),
       child: Column(
         children: [
           const Row(
@@ -64,9 +65,24 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
           ),
           const SizedBox(height: 20),
           if (_image != null) ...[
-            Image.file(File(_image!.path)),
-            const SizedBox(height: 20),
-            Text('Selected Image: ${_image!.name}'),
+            Column(
+              children: [
+                Container(
+                  constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width - 16,
+                      maxHeight: 300),
+                  child: AspectRatio(
+                    aspectRatio: 1.0,
+                    child: Image.file(
+                      File(_image!.path),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text('Selected Image: ${_image!.name}'),
+              ],
+            ),
           ],
           if (_video != null) ...[
             Container(

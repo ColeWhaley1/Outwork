@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,6 +16,8 @@ class _FormIncrementer extends State<FormIncrementer> {
   late TextEditingController _controller;
   late FocusNode _focusNode;
   int count = 0;
+
+  final double minRowWidth = 200.0;
 
   @override
   void initState() {
@@ -44,7 +48,7 @@ class _FormIncrementer extends State<FormIncrementer> {
 
   void updateCountWhenEnteredManually() {
     final input = _controller.text;
-    if(input.isNotEmpty){
+    if (input.isNotEmpty) {
       setState(() {
         count = int.tryParse(input) ?? 0;
       });
@@ -61,8 +65,8 @@ class _FormIncrementer extends State<FormIncrementer> {
   }
 
   void handleFocusChange() {
-    if(!_focusNode.hasFocus){
-      if(_controller.text.isEmpty){
+    if (!_focusNode.hasFocus) {
+      if (_controller.text.isEmpty) {
         _controller.text = '0';
         count = 0;
       }
@@ -71,63 +75,70 @@ class _FormIncrementer extends State<FormIncrementer> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Column(
-            children: [
-              Text(widget.label,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: max(screenWidth, minRowWidth)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              children: [
+                Text(
+                  widget.label,
                   style: TextStyle(
-                      fontSize: 16,
-                      color: Theme.of(context).colorScheme.primary)),
-              Row(
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      elevation: 0,
-                      shape: const CircleBorder(),
-                      padding: const EdgeInsets.all(5),
-                    ),
-                    onPressed: decrement,
-                    child: const Icon(Icons.remove),
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
-                  SizedBox(
-                    width: 100,
-                    child: TextFormField(
-                      controller: _controller,
-                      focusNode: _focusNode,
-                      style: const TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
+                ),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                        shape: const CircleBorder(),
+                        padding: const EdgeInsets.all(5),
                       ),
-                      textAlign: TextAlign.center,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
+                      onPressed: decrement,
+                      child: const Icon(Icons.remove),
+                    ),
+                    SizedBox(
+                      width: 100,
+                      child: TextFormField(
+                        controller: _controller,
+                        focusNode: _focusNode,
+                        style: const TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          LengthLimitingTextInputFormatter(2),
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
                       ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        LengthLimitingTextInputFormatter(2),
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
                     ),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      elevation: 0,
-                      shape: const CircleBorder(),
-                      padding: const EdgeInsets.all(5),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                        shape: const CircleBorder(),
+                        padding: const EdgeInsets.all(5),
+                      ),
+                      onPressed: increment,
+                      child: const Icon(Icons.add),
                     ),
-                    onPressed: increment,
-                    child: const Icon(Icons.add),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
