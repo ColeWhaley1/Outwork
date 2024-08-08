@@ -1,6 +1,8 @@
 # Outwork - My plans for this project
 
-TLDR: Workout app for creating exercises/workouts, viewing upcoming workouts. Includes ability to upload photo/video to share your unique exercise with other users.
+TLDR: Flutter/Firebase/Node.js Workout app for creating exercises/workouts, viewing upcoming workouts. Includes ability to upload photo/video to share your unique exercise with other users.
+
+Set up: cd into function folder. npm run dev will spin up the node.js backend. runs on local host 3000
 
 I intend to create an app where friends can motivate each other to exercise by building shareable workout 'decks'. These 'decks' are full workouts created and uniquely crafted by a user using exercise 'cards'. Each user can build and name their own decks which are then shareable amongst friends (or possibly anyone using the app). Other users can copy any deck they would like to try. 
 
