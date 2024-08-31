@@ -38,8 +38,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _pages = [
-    const Schedule(title: 'Upcoming Workouts'),
-    const WorkoutPage(title: 'Workout Decks'),
+    const Schedule(title: 'Upcoming'),
+    const WorkoutPage(title: 'Workouts and Exercises'),
   ];
 
   int _currPageIndex = 0;
