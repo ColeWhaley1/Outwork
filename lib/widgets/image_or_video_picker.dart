@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageOrVideoPicker extends StatefulWidget {
@@ -37,6 +36,7 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Row(
             children: [
@@ -44,7 +44,7 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
                 Icons.upload,
                 size: 32,
               ),
-              SizedBox(width: 20),
+              SizedBox(width: 10),
               Text(
                 style: TextStyle(
                   fontSize: 18,
@@ -55,6 +55,7 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
           ),
           const SizedBox(height: 20),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
                   onPressed: _pickImage, child: const Text("Choose Image")),
@@ -65,22 +66,25 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
           ),
           const SizedBox(height: 20),
           if (_image != null) ...[
-            Column(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width - 16,
-                      maxHeight: 300),
-                  child: AspectRatio(
-                    aspectRatio: 1.0,
-                    child: Image.file(
-                      File(_image!.path),
-                      fit: BoxFit.contain,
+                Column(
+                  children: [
+                    Container(
+                      constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width - 16,
+                          maxHeight: 300),
+                      child: AspectRatio(
+                        aspectRatio: 1.0,
+                        child: Image.file(
+                          File(_image!.path),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                const SizedBox(height: 20),
-                Text('Selected Image: ${_image!.name}'),
               ],
             ),
           ],

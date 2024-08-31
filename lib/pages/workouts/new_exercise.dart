@@ -73,15 +73,19 @@ class _NewExerciseFormState extends State<NewExerciseForm> {
                       const FormTimeInput(label: 'Rest Between Sets'),
                       const SizedBox(height: 20),
                       const Divider(
-                        color: Colors.grey,
-                        thickness: 1,
-                        indent: 20,
-                        endIndent: 20
-                      ),
+                          color: Colors.grey,
+                          thickness: 1,
+                          indent: 20,
+                          endIndent: 20),
                       const Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          ImageOrVideoPicker(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ImageOrVideoPicker(),
+                            ],
+                          )
                         ],
                       )
                     ],
