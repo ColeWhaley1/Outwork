@@ -27,9 +27,16 @@ class NewExerciseForm extends StatefulWidget {
 class _NewExerciseFormState extends State<NewExerciseForm> {
   final _formKey = GlobalKey<FormState>();
 
+  // incrementers
   int _setCount = 0;
   int _repCount = 0;
   int _weight = 0;
+
+  // time input
+  int _durationMinutes = 0;
+  int _durationSeconds = 0;
+  int _restMinutes = 0;
+  int _restSeconds = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -93,9 +100,33 @@ class _NewExerciseFormState extends State<NewExerciseForm> {
                         },
                       ),
                       const SizedBox(height: 20),
-                      const FormTimeInput(label: 'Duration'),
+                      FormTimeInput(
+                        label: 'Duration',
+                        onMinutesChanged: (minutes) {
+                          setState(() {
+                            _durationMinutes = minutes;
+                          });
+                        },
+                        onSecondsChanged: (seconds) {
+                          setState(() {
+                            _durationSeconds = seconds;
+                          });
+                        },
+                      ),
                       const SizedBox(height: 20),
-                      const FormTimeInput(label: 'Rest Between Sets'),
+                      FormTimeInput(
+                        label: 'Rest Between Sets',
+                        onMinutesChanged: (minutes) {
+                          setState(() {
+                            _restMinutes = minutes;
+                          });
+                        },
+                        onSecondsChanged: (seconds) {
+                          setState(() {
+                            _restSeconds = seconds;
+                          });
+                        },
+                      ),
                       const SizedBox(height: 20),
                       const Divider(
                           color: Colors.grey,
@@ -129,6 +160,8 @@ class _NewExerciseFormState extends State<NewExerciseForm> {
                   print('sets: $_setCount');
                   print('reps: $_repCount');
                   print('weight: $_weight');
+                  print('duration: $_durationMinutes mins and $_durationSeconds secs');
+                  print('rest: $_restMinutes mins and $_restSeconds secs');
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 23, 111, 183),

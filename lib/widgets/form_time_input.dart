@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class FormTimeInput extends StatefulWidget {
-  const FormTimeInput({super.key, required this.label});
+  const FormTimeInput({super.key, required this.label, required this.onMinutesChanged, required this.onSecondsChanged});
 
   final String label;
+  final ValueChanged<int> onMinutesChanged;
+  final ValueChanged<int> onSecondsChanged;
 
   @override
   State<FormTimeInput> createState() => _FormTimeInputState();
@@ -90,9 +92,12 @@ class _FormTimeInputState extends State<FormTimeInput> {
 
   void updateCountWhenEnteredManuallyMinutes() {
     final input = _controllerMinutes.text;
+
     if (input.isNotEmpty) {
+      final inputMinutes = int.tryParse(input) ?? 0;
       setState(() {
-        countMinutes = int.tryParse(input) ?? 0;
+        countMinutes = inputMinutes;
+        widget.onMinutesChanged(countMinutes);
       });
     }
   }
@@ -104,6 +109,7 @@ class _FormTimeInputState extends State<FormTimeInput> {
       if (inputSeconds < 60) {
         setState(() {
           countSeconds = inputSeconds;
+          widget.onSecondsChanged(countSeconds);
         });
       }
     }
