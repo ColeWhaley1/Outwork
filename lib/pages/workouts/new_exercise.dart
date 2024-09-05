@@ -27,6 +27,10 @@ class NewExerciseForm extends StatefulWidget {
 class _NewExerciseFormState extends State<NewExerciseForm> {
   final _formKey = GlobalKey<FormState>();
 
+  int _setCount = 0;
+  int _repCount = 0;
+  int _weight = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,13 +66,34 @@ class _NewExerciseFormState extends State<NewExerciseForm> {
                         maxLines: 10,
                       ),
                       const SizedBox(height: 20),
-                      const FormIncrementer(label: 'Set Count'),
+                      FormIncrementer(
+                        label: 'Set Count',
+                        onChanged: (value) {
+                          setState(() {
+                            _setCount = value;
+                          });
+                        },
+                      ),
                       const SizedBox(height: 20),
-                      const FormIncrementer(label: 'Rep Count'),
+                      FormIncrementer(
+                        label: 'Rep Count',
+                        onChanged: (value) {
+                          setState(() {
+                            _repCount = value;
+                          });
+                        },
+                      ),
                       const SizedBox(height: 20),
-                      const FormIncrementer(label: 'Duration'),
+                      FormIncrementer(
+                        label: 'Weight (lbs.)',
+                        onChanged: (value) {
+                          setState(() {
+                            _weight = value;
+                          });
+                        },
+                      ),
                       const SizedBox(height: 20),
-                      const FormIncrementer(label: 'Weight (lbs.)'),
+                      const FormTimeInput(label: 'Duration'),
                       const SizedBox(height: 20),
                       const FormTimeInput(label: 'Rest Between Sets'),
                       const SizedBox(height: 20),
@@ -101,7 +126,9 @@ class _NewExerciseFormState extends State<NewExerciseForm> {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  print('DATA');
+                  print('sets: $_setCount');
+                  print('reps: $_repCount');
+                  print('weight: $_weight');
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 23, 111, 183),

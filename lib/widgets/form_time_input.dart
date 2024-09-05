@@ -109,9 +109,15 @@ class _FormTimeInputState extends State<FormTimeInput> {
     }
   }
 
-  void handleFocusChange(TextEditingController controller, FocusNode focusNode,
-      int count, bool isSecondsInput) {
+  void handleFocusChange(
+    TextEditingController controller, 
+    FocusNode focusNode,
+    int count, 
+    bool isSecondsInput
+  ) {
+    
     if (!focusNode.hasFocus) {
+      FocusScope.of(context).unfocus();
       if (controller.text.isEmpty) {
         controller.text = '0';
         count = 0;
