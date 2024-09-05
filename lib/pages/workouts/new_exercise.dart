@@ -38,6 +38,9 @@ class _NewExerciseFormState extends State<NewExerciseForm> {
   int _restMinutes = 0;
   int _restSeconds = 0;
 
+  // image and video picker
+  List<String> _links = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,13 +136,19 @@ class _NewExerciseFormState extends State<NewExerciseForm> {
                           thickness: 1,
                           indent: 20,
                           endIndent: 20),
-                      const Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              ImageOrVideoPicker(),
+                              ImageOrVideoPicker(
+                                onChanged: (links) {
+                                  setState(() {
+                                    _links = links;
+                                  });
+                                },
+                              ),
                             ],
                           )
                         ],
@@ -162,6 +171,7 @@ class _NewExerciseFormState extends State<NewExerciseForm> {
                   print('weight: $_weight');
                   print('duration: $_durationMinutes mins and $_durationSeconds secs');
                   print('rest: $_restMinutes mins and $_restSeconds secs');
+                  print('links: $_links');
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 23, 111, 183),

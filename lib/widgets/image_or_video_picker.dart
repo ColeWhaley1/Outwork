@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageOrVideoPicker extends StatefulWidget {
-  const ImageOrVideoPicker({super.key});
+  const ImageOrVideoPicker({super.key, required this.onChanged});
+
+  final ValueChanged<List<String>> onChanged;
 
   @override
   State<ImageOrVideoPicker> createState() => _ImageOrVideoPickerState();
@@ -14,12 +16,22 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
   final ImagePicker _picker = ImagePicker();
   XFile? _image;
   XFile? _video;
+  List<String> _links = [];
 
   Future<void> _pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     setState(() {
       _image = image;
       _video = null;
+
+      //add path to links for form submission
+      final imageLink = _image?.path;
+      if(imageLink is String){
+        _links.add(imageLink);
+        setState(() {
+          widget.onChanged(_links);
+        });
+      }
     });
   }
 
@@ -28,6 +40,15 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
     setState(() {
       _video = video;
       _image = null;
+
+      //add path to links for form submission
+      final videoLink = _video?.path;
+      if(videoLink is String){
+        _links.add(videoLink);
+        setState(() {
+          widget.onChanged(_links);
+        });
+      }
     });
   }
 
