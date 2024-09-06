@@ -70,7 +70,6 @@ class _FormIncrementer extends State<FormIncrementer> {
 
   void handleFocusChange() {
     if (!_focusNode.hasFocus) {
-      FocusScope.of(context).unfocus();
       if (_controller.text.isEmpty) {
         _controller.text = '0';
         count = 0;

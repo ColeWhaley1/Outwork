@@ -123,7 +123,6 @@ class _FormTimeInputState extends State<FormTimeInput> {
   ) {
     
     if (!focusNode.hasFocus) {
-      FocusScope.of(context).unfocus();
       if (controller.text.isEmpty) {
         controller.text = '0';
         count = 0;

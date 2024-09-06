@@ -16,7 +16,7 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
   final ImagePicker _picker = ImagePicker();
   XFile? _image;
   XFile? _video;
-  List<String> _links = [];
+  final List<String> _links = [];
 
   Future<void> _pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
