@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 
@@ -25,7 +27,7 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     setState(() {
       _videoController?.dispose();
-      
+
       _image = image;
       _video = null;
 
@@ -33,9 +35,7 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
       final imageLink = _image?.path;
       if (imageLink is String) {
         _links.add(imageLink);
-        setState(() {
-          widget.onChanged(_links);
-        });
+        widget.onChanged(_links);
       }
     });
   }
@@ -48,17 +48,16 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
         _video = video;
         _image = null;
 
-        _videoController = VideoPlayerController.file(File(video.path))..initialize().then((_) {
-          setState(() {}); // ensures first frame is displayed
-        });
+        _videoController = VideoPlayerController.file(File(video.path))
+          ..initialize().then((_) {
+            setState(() {}); // ensures first frame is displayed
+          });
 
         //add path to links for form submission
         final videoLink = _video?.path;
         if (videoLink is String) {
           _links.add(videoLink);
-          setState(() {
-            widget.onChanged(_links);
-          });
+          widget.onChanged(_links);
         }
       });
     }
@@ -98,54 +97,72 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
             ],
           ),
           const SizedBox(height: 20),
-          if (_image != null) ...[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Container(
+          if (_links.isNotEmpty) ...[
+            SizedBox(
+              height: 300,
+              width: 300,
+              child: CarouselSlider(
+                options: CarouselOptions(
+                  height: 300,
+                  enableInfiniteScroll: false,
+                ),
+                items: _links.map((link) {
+                  // pre cache images to shorten loading
+                  precacheImage(FileImage(File(link)), context);
+
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
                       constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width - 16,
-                          maxHeight: 300),
+                        maxWidth: MediaQuery.of(context).size.width - 140,
+                        maxHeight: 300,
+                      ),
                       child: AspectRatio(
                         aspectRatio: 1.0,
-                        child: Image.file(
-                          File(_image!.path),
-                          fit: BoxFit.contain,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 3.0,
+                              color: Colors.blueGrey,
+                            ),
+                            borderRadius: BorderRadius.circular(8.0),
+                            image: DecorationImage(
+                              image: FileImage(File(link)),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ],
+                  );
+                }).toList(),
+              ),
             ),
+            const SizedBox(height: 40),
           ],
           if (_video != null && _videoController != null) ...[
             _videoController!.value.isInitialized
                 ? Container(
-                  constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width - 16,
-                    maxHeight: 300),
-                  child: AspectRatio(
-                      aspectRatio: _videoController!.value.aspectRatio,
-                      child: VideoPlayer(_videoController!)),
-                )
+                    constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width - 16,
+                        maxHeight: 300),
+                    child: AspectRatio(
+                        aspectRatio: _videoController!.value.aspectRatio,
+                        child: VideoPlayer(_videoController!)),
+                  )
                 : const CircularProgressIndicator(),
             const SizedBox(height: 10),
             FloatingActionButton(
               onPressed: () {
                 setState(() {
-                  _videoController!.value.isPlaying ? 
-                    _videoController!.pause() :
-                    _videoController!.play();
+                  _videoController!.value.isPlaying
+                      ? _videoController!.pause()
+                      : _videoController!.play();
                 });
               },
-              child: Icon(
-                _videoController!.value.isPlaying ? 
-                  Icons.pause :
-                  Icons.play_arrow
-              ),
+              child: Icon(_videoController!.value.isPlaying
+                  ? Icons.pause
+                  : Icons.play_arrow),
             )
           ],
         ],
