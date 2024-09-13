@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 
@@ -20,6 +19,12 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
   XFile? _image;
   XFile? _video;
   VideoPlayerController? _videoController;
+
+  num _currIndex = 0;
+  final num _imageVideoLimit = 2;
+
+  bool _showWarning = false;
+  String _warning = "";
 
   final List<String> _links = [];
 
@@ -90,12 +95,30 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                  onPressed: _pickImage, child: const Text("Choose Image")),
+                  onPressed: () {
+                    if(_links.length == _imageVideoLimit){
+                      setState(() {
+                        _showWarning = true;
+                        _warning = "You have reached the limit!";
+                      });
+                    } else {
+                      _pickImage();
+                    }
+                  }, child: const Text("Choose Image")),
               const SizedBox(width: 20),
               ElevatedButton(
                   onPressed: _pickVideo, child: const Text("Choose Video")),
             ],
           ),
+          if(_showWarning) ...[
+            const SizedBox(height: 20),
+            Text(
+              _warning,
+              style: const TextStyle(
+                color: Colors.red,
+              )
+            ),
+          ],
           const SizedBox(height: 20),
           if (_links.isNotEmpty) ...[
             SizedBox(
@@ -105,10 +128,13 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
                 options: CarouselOptions(
                   height: 300,
                   enableInfiniteScroll: false,
+                  onPageChanged: (index, reason) {
+                    setState(() {
+                      _currIndex = index;
+                    });
+                  }
                 ),
                 items: _links.map((link) {
-                  // pre cache images to shorten loading
-                  precacheImage(FileImage(File(link)), context);
 
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -136,6 +162,23 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
                     ),
                   );
                 }).toList(),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(_links.length, (index) {
+                  return Container(
+                    margin: const EdgeInsets.all(8.0),
+                    width: 10.0,
+                    height: 10.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _currIndex == index ? Colors.blueGrey : Colors.grey,
+                    ),
+                  );
+                }),
               ),
             ),
             const SizedBox(height: 40),
