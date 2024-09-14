@@ -21,7 +21,7 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
   VideoPlayerController? _videoController;
 
   int _currIndex = 0;
-  final num _imageVideoLimit = 8;
+  final int _imageVideoLimit = 8;
 
   bool _showWarning = false;
   String _warning = "";
@@ -120,7 +120,7 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
                     if (_links.length == _imageVideoLimit) {
                       setState(() {
                         _showWarning = true;
-                        _warning = "You have reached the limit!";
+                        _warning = "Limit reached, try removing one first!";
                       });
                     } else {
                       _pickImage();
@@ -200,8 +200,8 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
                               color: Colors.white,
                             ),
                             onTap: () {
-                              _checkImageVideoLimit();
                               _removeImage(index);
+                              _checkImageVideoLimit();
                             },
                           ),
                         )
