@@ -73,9 +73,9 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
       _links.removeAt(index);
 
       if (_currIndex >= _links.length && _links.isNotEmpty) {
-        _currIndex = _links.length - 1; 
+        _currIndex = _links.length - 1;
       } else if (_links.isEmpty) {
-        _currIndex = 0; 
+        _currIndex = 0;
       }
     });
   }
@@ -87,6 +87,13 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
         _showWarning = false;
       }
     });
+  }
+
+  bool isVideo(String link) {
+    final String extension = link.split('.').last.toLowerCase();
+    final videoExtensions = ['mp4', 'mov', 'avi', 'mkv', 'webm'];
+
+    return videoExtensions.contains(extension);
   }
 
   @override
@@ -168,19 +175,9 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
                           ),
                           child: AspectRatio(
                             aspectRatio: 1.0,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 3.0,
-                                  color: Colors.blueGrey,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                                image: DecorationImage(
-                                  image: FileImage(File(link)),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
+                            child: isVideo(link)
+                                ? VideoContainer(link: link)
+                                : ImageContainer(link: link),
                           ),
                         ),
                         const Positioned(
@@ -233,18 +230,64 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
             ],
             const SizedBox(height: 40),
           ],
-          if (_video != null && _videoController != null) ...[
-            _videoController!.value.isInitialized
-                ? Container(
-                    constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width - 16,
-                        maxHeight: 300),
-                    child: AspectRatio(
-                        aspectRatio: _videoController!.value.aspectRatio,
-                        child: VideoPlayer(_videoController!)),
-                  )
-                : const CircularProgressIndicator(),
-            const SizedBox(height: 10),
+        ],
+      ),
+    );
+  }
+}
+
+class VideoContainer extends StatefulWidget {
+  const VideoContainer({super.key, required this.link});
+
+  final String link;
+
+  @override
+  State<VideoContainer> createState() => _VideoContainerState();
+}
+
+class _VideoContainerState extends State<VideoContainer> {
+  VideoPlayerController? _videoController;
+
+  @override
+  void initState() {
+    super.initState();
+    _videoController = VideoPlayerController.file(File(widget.link))
+      ..initialize().then((_) {
+        setState(() {}); // Once initialized, update the UI
+      });
+  }
+
+  @override
+  void dispose() {
+    _videoController?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          width: 3.0,
+          color: Colors.blueGrey,
+        ),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Column(
+        children: [
+          if (_videoController != null && _videoController!.value.isInitialized)
+            Container(
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width - 16,
+                  maxHeight: 300),
+              child: AspectRatio(
+                  aspectRatio: _videoController!.value.aspectRatio,
+                  child: VideoPlayer(_videoController!)),
+            )
+          else
+            const CircularProgressIndicator(),
+          const SizedBox(height: 10),
+          if (_videoController != null)
             FloatingActionButton(
               onPressed: () {
                 setState(() {
@@ -256,9 +299,35 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
               child: Icon(_videoController!.value.isPlaying
                   ? Icons.pause
                   : Icons.play_arrow),
-            )
-          ],
+            ),
         ],
+      ),
+    );
+  }
+}
+
+
+class ImageContainer extends StatelessWidget {
+  const ImageContainer({
+    super.key,
+    required this.link,
+  });
+
+  final String link;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          width: 3.0,
+          color: Colors.blueGrey,
+        ),
+        borderRadius: BorderRadius.circular(8.0),
+        image: DecorationImage(
+          image: FileImage(File(link)),
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
