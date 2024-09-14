@@ -20,8 +20,8 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
   XFile? _video;
   VideoPlayerController? _videoController;
 
-  num _currIndex = 0;
-  final num _imageVideoLimit = 2;
+  int _currIndex = 0;
+  final num _imageVideoLimit = 8;
 
   bool _showWarning = false;
   String _warning = "";
@@ -68,6 +68,27 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
     }
   }
 
+  void _removeImage(index) {
+    setState(() {
+      _links.removeAt(index);
+
+      if (_currIndex >= _links.length && _links.isNotEmpty) {
+        _currIndex = _links.length - 1; 
+      } else if (_links.isEmpty) {
+        _currIndex = 0; 
+      }
+    });
+  }
+
+  void _checkImageVideoLimit() {
+    setState(() {
+      if (_links.length < 8) {
+        _warning = '';
+        _showWarning = false;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -96,7 +117,7 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
             children: [
               ElevatedButton(
                   onPressed: () {
-                    if(_links.length == _imageVideoLimit){
+                    if (_links.length == _imageVideoLimit) {
                       setState(() {
                         _showWarning = true;
                         _warning = "You have reached the limit!";
@@ -104,20 +125,19 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
                     } else {
                       _pickImage();
                     }
-                  }, child: const Text("Choose Image")),
+                  },
+                  child: const Text("Choose Image")),
               const SizedBox(width: 20),
               ElevatedButton(
                   onPressed: _pickVideo, child: const Text("Choose Video")),
             ],
           ),
-          if(_showWarning) ...[
+          if (_showWarning) ...[
             const SizedBox(height: 20),
-            Text(
-              _warning,
-              style: const TextStyle(
-                color: Colors.red,
-              )
-            ),
+            Text(_warning,
+                style: const TextStyle(
+                  color: Colors.red,
+                )),
           ],
           const SizedBox(height: 20),
           if (_links.isNotEmpty) ...[
@@ -126,61 +146,91 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
               width: 300,
               child: CarouselSlider(
                 options: CarouselOptions(
-                  height: 300,
-                  enableInfiniteScroll: false,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      _currIndex = index;
-                    });
-                  }
-                ),
-                items: _links.map((link) {
+                    height: 300,
+                    enableInfiniteScroll: false,
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        _currIndex = index;
+                      });
+                    }),
+                items: _links.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final link = entry.value;
 
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width - 140,
-                        maxHeight: 300,
-                      ),
-                      child: AspectRatio(
-                        aspectRatio: 1.0,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 3.0,
-                              color: Colors.blueGrey,
-                            ),
-                            borderRadius: BorderRadius.circular(8.0),
-                            image: DecorationImage(
-                              image: FileImage(File(link)),
-                              fit: BoxFit.cover,
+                    child: Stack(
+                      children: [
+                        Container(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width - 140,
+                            maxHeight: 300,
+                          ),
+                          child: AspectRatio(
+                            aspectRatio: 1.0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 3.0,
+                                  color: Colors.blueGrey,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                                image: DecorationImage(
+                                  image: FileImage(File(link)),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                        const Positioned(
+                          right: 5,
+                          top: 5,
+                          child: Icon(
+                            Icons.circle,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Positioned(
+                          right: 5,
+                          top: 5,
+                          child: GestureDetector(
+                            child: const Icon(
+                              Icons.cancel,
+                              color: Colors.white,
+                            ),
+                            onTap: () {
+                              _checkImageVideoLimit();
+                              _removeImage(index);
+                            },
+                          ),
+                        )
+                      ],
                     ),
                   );
                 }).toList(),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(_links.length, (index) {
-                  return Container(
-                    margin: const EdgeInsets.all(8.0),
-                    width: 10.0,
-                    height: 10.0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _currIndex == index ? Colors.blueGrey : Colors.grey,
-                    ),
-                  );
-                }),
+            if (_links.length >= 2) ...[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(_links.length, (index) {
+                    return Container(
+                      margin: const EdgeInsets.all(8.0),
+                      width: 10.0,
+                      height: 10.0,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color:
+                            _currIndex == index ? Colors.blueGrey : Colors.grey,
+                      ),
+                    );
+                  }),
+                ),
               ),
-            ),
+            ],
             const SizedBox(height: 40),
           ],
           if (_video != null && _videoController != null) ...[
