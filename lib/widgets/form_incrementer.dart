@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class FormIncrementer extends StatefulWidget {
-  const FormIncrementer({super.key, required this.label});
+  const FormIncrementer({super.key, required this.label, required this.onChanged});
 
   final String label;
+  final ValueChanged<int> onChanged;
 
   @override
   State<FormIncrementer> createState() => _FormIncrementer();
@@ -42,6 +43,7 @@ class _FormIncrementer extends State<FormIncrementer> {
       if (count > 0) {
         count--;
         _controller.text = count.toString();
+
       }
     });
   }
@@ -51,6 +53,7 @@ class _FormIncrementer extends State<FormIncrementer> {
     if (input.isNotEmpty) {
       setState(() {
         count = int.tryParse(input) ?? 0;
+        widget.onChanged(count);
       });
     }
   }
@@ -60,6 +63,7 @@ class _FormIncrementer extends State<FormIncrementer> {
       if (count < 99) {
         count++;
         _controller.text = count.toString();
+
       }
     });
   }

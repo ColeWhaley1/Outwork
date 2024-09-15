@@ -9,6 +9,10 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  PaintingBinding.instance.imageCache.maximumSize = 4000; // default is 1000
+  PaintingBinding.instance.imageCache.maximumSizeBytes = 200 * 1024 * 1024; // default is 100 MB
+
   runApp(const MyApp());
 }
 
