@@ -21,11 +21,16 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
   VideoPlayerController? _videoController;
 
   int _currIndex = 0;
-  final int _imageVideoLimit = 8;
 
+  // limits
+  final int _imageVideoLimit = 8;
+  final int _videoLimit = 1;
+
+  // errors
   bool _showWarning = false;
   String _warning = "";
 
+  // image/video paths
   final List<String> _links = [];
 
   Future<void> _pickImage() async {
@@ -96,6 +101,20 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
     return videoExtensions.contains(extension);
   }
 
+  void _provideWarning(String warning) {
+    setState(() {
+      _showWarning = true;
+      _warning = warning;
+    });
+  }
+
+  void _disableWarning() {
+    setState(() {
+      _showWarning = false;
+      _warning = "";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -125,10 +144,8 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
               ElevatedButton(
                   onPressed: () {
                     if (_links.length == _imageVideoLimit) {
-                      setState(() {
-                        _showWarning = true;
-                        _warning = "Limit reached, try removing one first!";
-                      });
+                      _provideWarning(
+                          "Limit reached, try removing an image or video first!");
                     } else {
                       _pickImage();
                     }
@@ -136,15 +153,39 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
                   child: const Text("Choose Image")),
               const SizedBox(width: 20),
               ElevatedButton(
-                  onPressed: _pickVideo, child: const Text("Choose Video")),
+                onPressed: () {
+                  List<String> videoLinks =
+                      _links.where((link) => isVideo(link)).toList();
+                  if (videoLinks.length >= _videoLimit) {
+                    _provideWarning(
+                        "Video limit reached, try removing a video first!");
+                  } else {
+                    _pickVideo();
+                  }
+                },
+                child: const Text("Choose Video"),
+              ),
             ],
           ),
           if (_showWarning) ...[
             const SizedBox(height: 20),
-            Text(_warning,
-                style: const TextStyle(
-                  color: Colors.red,
-                )),
+            const Icon(Icons.error, color: Colors.red),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 300,
+                  child: Text(
+                    _warning,
+                    style: const TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
           ],
           const SizedBox(height: 20),
           if (_links.isNotEmpty) ...[
@@ -174,7 +215,9 @@ class _ImageOrVideoPickerState extends State<ImageOrVideoPicker> {
                             maxHeight: 300,
                           ),
                           child: AspectRatio(
-                            aspectRatio: 1.0,
+                            aspectRatio: isVideo(link)
+                                ? _videoController!.value.aspectRatio
+                                : 1.0,
                             child: isVideo(link)
                                 ? VideoContainer(link: link)
                                 : ImageContainer(link: link),
@@ -248,6 +291,11 @@ class VideoContainer extends StatefulWidget {
 class _VideoContainerState extends State<VideoContainer> {
   VideoPlayerController? _videoController;
 
+  final Icon _playIcon = const Icon(Icons.play_arrow);
+  final Icon _pauseIcon = const Icon(Icons.pause);
+
+  Icon _playPauseIcon = const Icon(Icons.play_arrow);
+
   @override
   void initState() {
     super.initState();
@@ -255,12 +303,34 @@ class _VideoContainerState extends State<VideoContainer> {
       ..initialize().then((_) {
         setState(() {}); // Once initialized, update the UI
       });
+
+    _videoController?.addListener(() {
+      if (_videoController!.value.isCompleted) {
+        setState(() {
+          _playPauseIcon = _playIcon;
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
     _videoController?.dispose();
     super.dispose();
+  }
+
+  void _togglePlayPause() {
+    if (_videoController!.value.isPlaying) {
+      _videoController!.pause();
+      setState(() {
+        _playPauseIcon = _playIcon;
+      });
+    } else {
+      _videoController!.play();
+      setState(() {
+        _playPauseIcon = _pauseIcon;
+      });
+    }
   }
 
   @override
@@ -273,39 +343,35 @@ class _VideoContainerState extends State<VideoContainer> {
         ),
         borderRadius: BorderRadius.circular(8.0),
       ),
-      child: Column(
-        children: [
-          if (_videoController != null && _videoController!.value.isInitialized)
-            Container(
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width - 16,
-                  maxHeight: 300),
-              child: AspectRatio(
-                  aspectRatio: _videoController!.value.aspectRatio,
-                  child: VideoPlayer(_videoController!)),
-            )
-          else
-            const CircularProgressIndicator(),
-          const SizedBox(height: 10),
-          if (_videoController != null)
-            FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  _videoController!.value.isPlaying
-                      ? _videoController!.pause()
-                      : _videoController!.play();
-                });
-              },
-              child: Icon(_videoController!.value.isPlaying
-                  ? Icons.pause
-                  : Icons.play_arrow),
+      child: 
+      (_videoController != null && _videoController!.value.isInitialized) ? // if video controller is initialized, then display it
+        Stack(
+          fit: StackFit.expand,
+          children: [
+            AspectRatio(
+              aspectRatio: _videoController!.value.aspectRatio,
+              child: VideoPlayer(_videoController!),
             ),
-        ],
-      ),
+            Positioned(
+              bottom: 4, 
+              right: 4,
+              child: SizedBox(
+                height: 40,
+                width: 40,
+                child: FloatingActionButton(
+                  onPressed: _togglePlayPause,
+                  backgroundColor: const Color.fromARGB(162, 184, 217, 251),
+                  child: _playPauseIcon,
+                ),
+              ),
+            ),
+          ],
+        )
+      : // else
+        const CircularProgressIndicator(),
     );
   }
 }
-
 
 class ImageContainer extends StatelessWidget {
   const ImageContainer({
