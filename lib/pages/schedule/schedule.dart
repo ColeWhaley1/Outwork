@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:lottie/lottie.dart';
 import 'package:workout_app/pages/schedule/types.dart';
 import 'package:workout_app/pages/schedule/workout_info.dart';
 import 'package:workout_app/pages/workouts/types.dart';
@@ -50,6 +51,22 @@ class _ThisWeekScheduleState extends State<ThisWeekSchedule> {
             padding: const EdgeInsets.all(10.0),
             child: WeekCarousel(
                 height: orientation == Orientation.portrait ? 300.0 : 200.0),
+          ),
+          SizedBox(
+            width: 200,
+            height: 200,
+            child: Lottie.asset(
+              'assets/fire-animation.json',
+              repeat: true,
+            ),
+          ),
+          const Text(
+            "7",
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 60,
+            ),
           ),
         ],
       );
@@ -233,7 +250,10 @@ class _DayScheduleCardState extends State<DayScheduleCard> {
                     Text(
                       widget.dayInfo.totalTime.toString(),
                       style: const TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20,),
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
                     ),
                   ],
                 ),
