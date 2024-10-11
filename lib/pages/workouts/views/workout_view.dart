@@ -10,6 +10,6 @@ class WorkoutView extends StatefulWidget {
 class _WorkoutViewState extends State<WorkoutView> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Column();
   }
 }

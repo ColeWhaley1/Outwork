@@ -17,9 +17,12 @@ class _ScheduleState extends State<Schedule> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+      
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(25.0),
+        child: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+        ),
       ),
       body: const Flex(
         direction: Axis.horizontal,
@@ -92,7 +95,8 @@ class _WeekCarouselState extends State<WeekCarousel> {
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(horizontal: 5.0),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.inverseSurface,
+                color: Theme.of(context).colorScheme.onSurface,
+                borderRadius: BorderRadius.circular(20.0),
               ),
               child: DayScheduleCard(
                 dayInfo: dayInfo,
@@ -120,7 +124,11 @@ class _DayScheduleCardState extends State<DayScheduleCard> {
     return Column(
       children: [
         Container(
-          height: 20.0,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary,
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          height: 26.0,
           margin: const EdgeInsets.all(10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -138,8 +146,12 @@ class _DayScheduleCardState extends State<DayScheduleCard> {
         ),
         Expanded(
           child: Container(
-            padding: const EdgeInsets.all(5.0),
-            margin: const EdgeInsets.all(5.0),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.secondary,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            padding: const EdgeInsets.all(10.0),
+            margin: const EdgeInsets.all(10.0),
             child: WorkoutInfo(
               deck: widget.dayInfo.deck,
               textColor: Colors.white,

@@ -28,7 +28,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(25.0),
         child: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).colorScheme.primary,
         ),
       ),
       body: Column(
