@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workout_app/pages/workouts/new_exercise.dart';
+import 'package:workout_app/pages/workouts/views/exercise_view.dart';
+import 'package:workout_app/pages/workouts/views/workout_view.dart';
 
 class WorkoutPage extends StatefulWidget {
   const WorkoutPage({super.key, required this.title});
@@ -11,14 +13,11 @@ class WorkoutPage extends StatefulWidget {
 }
 
 class _WorkoutPageState extends State<WorkoutPage> {
-
-  void addNewWorkout() {
+  void addNewExercise() {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const NewExercise(
-          title: 'New Workout'
-        ),
+        builder: (context) => const NewExercise(title: 'New Exercise'),
       ),
     );
   }
@@ -26,32 +25,57 @@ class _WorkoutPageState extends State<WorkoutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(25.0),
+        child: AppBar(
+          backgroundColor: Colors.white,
+        ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+      body: Column(
+        children: [
+          const Row(
+            children: [
+              Spacer(
+                flex: 2,
+              ),
+              Text("Workouts"),
+              Spacer(flex: 1),
+              Text("Exercises"),
+              Spacer(
+                flex: 2,
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Expanded(
+            child: Stack(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: ElevatedButton(
-                    onPressed: addNewWorkout, 
-                    style: ElevatedButton.styleFrom(
-                      shape: const CircleBorder(),
-                      padding: const EdgeInsets.all(15)
-                    ),
+                Container(
+                  color: Colors.white,
+                  child: PageView( 
+                    children: const [
+                      WorkoutView(),
+                      ExerciseView(),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  right: 20,
+                  bottom: 20,
+                  child: FloatingActionButton(
+                    onPressed: addNewExercise,
+                    shape: const CircleBorder(),
+                    backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+                    foregroundColor: Theme.of(context).colorScheme.primary,
                     child: const Icon(Icons.add),
                   ),
                 )
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
