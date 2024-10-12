@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:lottie/lottie.dart';
 import 'package:workout_app/pages/schedule/types.dart';
 import 'package:workout_app/pages/schedule/workout_info.dart';
 import 'package:workout_app/pages/workouts/types.dart';
@@ -17,9 +18,11 @@ class _ScheduleState extends State<Schedule> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(25.0),
+        child: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+        ),
       ),
       body: const Flex(
         direction: Axis.horizontal,
@@ -42,10 +45,62 @@ class _ThisWeekScheduleState extends State<ThisWeekSchedule> {
   @override
   Widget build(BuildContext context) {
     return OrientationBuilder(builder: (context, orientation) {
-      return Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: WeekCarousel(
-            height: orientation == Orientation.portrait ? 300.0 : 200.0),
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: WeekCarousel(
+                height: orientation == Orientation.portrait ? 300.0 : 200.0),
+          ),
+          const SizedBox(height: 50,),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: 200,
+                height: 200,
+                child: Lottie.asset(
+                  'assets/fire-animation.json',
+                  repeat: true,
+                ),
+              ),
+              const Positioned(
+                bottom: 0,
+                right: 75,
+                child: Text(
+                  "7",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 60,
+                    shadows: [
+                      Shadow(
+                        color: Color.fromARGB(118, 254, 254, 254), 
+                        offset: Offset(3.0, 3.0),
+                        blurRadius: 3.0, 
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const Text(
+                  "Weeks in a Row",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    shadows: [
+                      Shadow(
+                        color: Color.fromARGB(118, 254, 254, 254), 
+                        offset: Offset(3.0, 3.0),
+                        blurRadius: 3.0, 
+                      ),
+                    ],
+                  ),
+                ),
+        ],
       );
     });
   }
@@ -64,19 +119,71 @@ class _WeekCarouselState extends State<WeekCarousel> {
   // TEMP, using as example. This will be populated when user adds workout for specific day
   var weekInfo = [
     DayInfo(
-        'Sunday', Deck([Exercise('push-ups', 10), Exercise('sit-ups', 10)])),
+      'Sunday',
+      Deck(
+        [
+          Exercise('push-ups', 10),
+          Exercise('sit-ups', 10),
+        ],
+      ),
+      30,
+    ),
     DayInfo(
-        'Monday', Deck([Exercise('push-ups', 10), Exercise('sit-ups', 10)])),
+      'Monday',
+      Deck(
+        [
+          Exercise('pull-ups', 10),
+          Exercise('barbell curls', 10),
+        ],
+      ),
+      45,
+    ),
     DayInfo(
-        'Tuesday', Deck([Exercise('push-ups', 10), Exercise('sit-ups', 10)])),
+      'Tuesday',
+      Deck(
+        [
+          Exercise('Push-ups', 10),
+          Exercise('Sit-ups', 10),
+        ],
+      ),
+      30,
+    ),
     DayInfo(
-        'Wednesday', Deck([Exercise('push-ups', 10), Exercise('sit-ups', 10)])),
+      'Wednesday',
+      Deck(
+        [
+          Exercise('push-ups', 10),
+          Exercise('sit-ups', 10),
+        ],
+      ),
+      60,
+    ),
     DayInfo(
-        'Thursday', Deck([Exercise('push-ups', 10), Exercise('sit-ups', 10)])),
+      'Thursday',
+      Deck(
+        [
+          Exercise('push-ups', 10),
+          Exercise('sit-ups', 10),
+        ],
+      ),
+      30,
+    ),
     DayInfo(
-        'Friday', Deck([Exercise('push-ups', 10), Exercise('sit-ups', 10)])),
+      'Friday',
+      Deck([
+        Exercise('push-ups', 10),
+        Exercise('sit-ups', 10),
+      ]),
+      30,
+    ),
     DayInfo(
-        'Saturday', Deck([Exercise('push-ups', 10), Exercise('sit-ups', 10)])),
+      'Saturday',
+      Deck([
+        Exercise('push-ups', 10),
+        Exercise('sit-ups', 10),
+      ]),
+      30,
+    ),
   ];
 
   @override
@@ -92,7 +199,8 @@ class _WeekCarouselState extends State<WeekCarousel> {
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(horizontal: 5.0),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.inverseSurface,
+                color: Theme.of(context).colorScheme.onSurface,
+                borderRadius: BorderRadius.circular(20.0),
               ),
               child: DayScheduleCard(
                 dayInfo: dayInfo,
@@ -120,7 +228,11 @@ class _DayScheduleCardState extends State<DayScheduleCard> {
     return Column(
       children: [
         Container(
-          height: 20.0,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary,
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          height: 26.0,
           margin: const EdgeInsets.all(10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -138,8 +250,12 @@ class _DayScheduleCardState extends State<DayScheduleCard> {
         ),
         Expanded(
           child: Container(
-            padding: const EdgeInsets.all(5.0),
-            margin: const EdgeInsets.all(5.0),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.secondary,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            padding: const EdgeInsets.all(10.0),
+            margin: const EdgeInsets.all(10.0),
             child: WorkoutInfo(
               deck: widget.dayInfo.deck,
               textColor: Colors.white,
@@ -147,10 +263,33 @@ class _DayScheduleCardState extends State<DayScheduleCard> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(10.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Container(
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.secondary,
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.timer,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      widget.dayInfo.totalTime.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(
                 height: 40.0,
                 width: 40.0,
@@ -168,7 +307,7 @@ class _DayScheduleCardState extends State<DayScheduleCard> {
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.zero,
-                    backgroundColor: const Color.fromARGB(60, 255, 255, 255),
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
                   ),
                   child: const Center(
                     child: Icon(
@@ -180,7 +319,7 @@ class _DayScheduleCardState extends State<DayScheduleCard> {
               ),
             ],
           ),
-        )
+        ),
       ],
     );
   }
