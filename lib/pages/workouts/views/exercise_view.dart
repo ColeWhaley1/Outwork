@@ -19,7 +19,10 @@ class _ExerciseViewState extends State<ExerciseView> {
             SizedBox(
               height: 200,
               width: 200,
-              child: Text("You don't have any exercises yet! Try adding some first.", textAlign: TextAlign.center,),
+              child: Text(
+                "You don't have any exercises yet! Try adding some first.",
+                textAlign: TextAlign.center,
+              ),
             ),
           ],
         ),
