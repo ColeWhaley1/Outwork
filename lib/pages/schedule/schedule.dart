@@ -52,22 +52,54 @@ class _ThisWeekScheduleState extends State<ThisWeekSchedule> {
             child: WeekCarousel(
                 height: orientation == Orientation.portrait ? 300.0 : 200.0),
           ),
-          SizedBox(
-            width: 200,
-            height: 200,
-            child: Lottie.asset(
-              'assets/fire-animation.json',
-              repeat: true,
-            ),
+          const SizedBox(height: 50,),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: 200,
+                height: 200,
+                child: Lottie.asset(
+                  'assets/fire-animation.json',
+                  repeat: true,
+                ),
+              ),
+              const Positioned(
+                bottom: 0,
+                right: 75,
+                child: Text(
+                  "7",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 60,
+                    shadows: [
+                      Shadow(
+                        color: Color.fromARGB(118, 254, 254, 254), 
+                        offset: Offset(3.0, 3.0),
+                        blurRadius: 3.0, 
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
           const Text(
-            "7",
-            style: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 60,
-            ),
-          ),
+                  "Weeks in a Row",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    shadows: [
+                      Shadow(
+                        color: Color.fromARGB(118, 254, 254, 254), 
+                        offset: Offset(3.0, 3.0),
+                        blurRadius: 3.0, 
+                      ),
+                    ],
+                  ),
+                ),
         ],
       );
     });
